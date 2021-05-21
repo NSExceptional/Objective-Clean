@@ -19,6 +19,14 @@
     ],
     "main": "./dist/extension.js",
     "contributes": {
+        "menus": {
+            "commandPalette": [
+                {
+                    "command": "objective-clean.modernize-file",
+                    "when": "editorLangId =~ /^objective-c(pp)?$|^logos$/"
+                }
+            ]
+        },
         "commands": [
             {
                 "command": "objective-clean.modernize-file",
