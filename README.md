@@ -1,6 +1,12 @@
+# Objective-Clean
+
+Objective-Clean is a VS Code extension to modernize old Objective-C code. We've all been there: you crack open a project written by someone who learned Objc 20 years ago and never got into the habit of using collection literals and subscripting syntax, and you wish you could flip a switch to convert that code to use modern Objective-C syntax!
+
+Well, now you can!
+
 ## Features
 
-Currently, Objective-Clean will only do the following:
+This extension comes with a single command, `Convert File to Modern Objective-C Syntax`, that will only do the following:
 
 - Convert `NSNumber` initializers to use `NSNumber` literals
 - Convert `NS[Mutable]Dictionary|Array` initializers to use collection literals
