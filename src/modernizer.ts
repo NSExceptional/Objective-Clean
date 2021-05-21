@@ -8,7 +8,7 @@
 
 import { Scanner } from "./scanner";
 
-function convertObjsKeysListToPairs(input: string): string {
+function NSDictionaryObjsKeysListToPairs(input: string): string {
     const scanner = new Scanner(input);
     
     // Gather keys and values as pairs to be swapped
@@ -58,7 +58,7 @@ function convertObjsKeysListToPairs(input: string): string {
     // return input;
 }
 
-function applyDictionaryLiterals(text: string): string {
+function NSDictionaryLiterals(text: string): string {
     // 1: Everything before the objs+keys
     // 2: 'Mutable' | ''
     // 3: The objects and keys
@@ -76,14 +76,14 @@ function applyDictionaryLiterals(text: string): string {
     // Abort if we couldn't match objs & keys
     if (!objsAndKeys) return text;
     
-    const keyValuePairs = convertObjsKeysListToPairs(objsAndKeys);
+    const keyValuePairs = NSDictionaryObjsKeysListToPairs(objsAndKeys);
     return text
         .replace(prefix, '@{')
         .replace(objsAndKeys, keyValuePairs)
         .replace(ending, `}${mutability}`);
 }
 
-function applyArrayLiterals(text: string): string {
+function NSArrayLiterals(text: string): string {
     // 1: Everything before the values
     // 2: 'Mutable' | ''
     // 3: The objects and keys
@@ -106,24 +106,37 @@ function applyArrayLiterals(text: string): string {
         .replace(ending, `]${mutability}`);
 }
 
-export function modernize(text: string): string {
-    // NSNumber number literals like @5 or @3.14
-    text = text.replace(/\[NSNumber numberWith\w+:\s*([\d\.]+)\]/g, '@$1');
-    // NSNumber boolean literals like @YES
-    text = text.replace(/\[NSNumber numberWith\w+:\s*(YES|NO)\]/g, '@$1');
-    // NSNumber wrapper literals like @(count)
-    text = text.replace(/\[NSNumber numberWith\w+:\s*([\w\.]+)\]/g, '@($1)');
-    
-    text = applyDictionaryLiterals(text);
-    text = applyArrayLiterals(text);
-    
+function NSNumberLiterals(text: string): string {
+    return text
+    // Number literals like @5 or @3.14
+    .replace(/\[NSNumber numberWith\w+:\s*([\d\.]+)\]/g, '@$1')
+    // Boolean literals like @YES
+    .replace(/\[NSNumber numberWith\w+:\s*(YES|NO)\]/g, '@$1')
+    // Wrapper literals like @(count)
+    .replace(/\[NSNumber numberWith\w+:\s*([\w\.]+)\]/g, '@($1)');
+}
+
+function NSDictionaryAccessors(text: string): string {
     // Dictionary accessors
-    text = text.replace(/\[([^\[]+)\s+objectForKey:([^\]]+)\]/g, '$1[$2]');
-    text = text.replace(/\[([^\[]+)\s+setObject:(.+) forKey:([^\]]+)\]/g, '$1[$3] = $2');
-    
+    return text
+        .replace(/\[([^\[]+)\s+objectForKey:([^\]]+)\]/g, '$1[$2]')
+        .replace(/\[([^\[]+)\s+setObject:(.+) forKey:([^\]]+)\]/g, '$1[$3] = $2');
+}
+
+function NSArrayAccessors(text: string): string {
     // Array accessors
-    text = text.replace(/\[([^\[]+)\s+objectAtIndex:([^\]]+)\]/g, '$1[$2]');
-    text = text.replace(/\[([^\[]+)\s+replaceObjectAtIndex:(.+) withObject:([^\]]+)\]/g, '$1[$2] = $3');
+    return text
+        .replace(/\[([^\[]+)\s+objectAtIndex:([^\]]+)\]/g, '$1[$2]')
+        .replace(/\[([^\[]+)\s+replaceObjectAtIndex:(.+) withObject:([^\]]+)\]/g, '$1[$2] = $3');
+}
+
+export function modernize(text: string): string {
+    text = NSNumberLiterals(text);
+    text = NSDictionaryLiterals(text);
+    text = NSArrayLiterals(text);
+    
+    text = NSDictionaryAccessors(text);
+    text = NSArrayAccessors(text);
     
     return text;
 }
