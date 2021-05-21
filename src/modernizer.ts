@@ -130,6 +130,10 @@ function NSArrayAccessors(text: string): string {
         .replace(/\[([^\[]+)\s+replaceObjectAtIndex:(.+) withObject:([^\]]+)\]/g, '$1[$2] = $3');
 }
 
+function AllocInitToNew(text: string): string {
+    return text.replace(/\[\[([\w_][\w\d_$]+) alloc\] init\]/, '[$1 new]');
+}
+
 export function modernize(text: string): string {
     text = NSNumberLiterals(text);
     text = NSDictionaryLiterals(text);
@@ -137,6 +141,8 @@ export function modernize(text: string): string {
     
     text = NSDictionaryAccessors(text);
     text = NSArrayAccessors(text);
+    
+    text = AllocInitToNew(text);
     
     return text;
 }
