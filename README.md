@@ -6,6 +6,8 @@ Currently, Objective-Clean will only do the following:
 - Convert `NS[Mutable]Dictionary|Array` initializers to use collection literals
 - Convert `NS[Mutable]Dictionary|Array` accessors to use subscripting syntax
 
+https://user-images.githubusercontent.com/8371943/119164357-f5798100-ba21-11eb-9615-1f94564b4fcf.mp4
+
 ## Known Issues
 
 For most operations, this extension uses simple regex find and replace. As a result, there may be edge cases it cannot handle or won't handle correctly without a full-blown parser. Some contrived examples:
