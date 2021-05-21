@@ -8,25 +8,6 @@
 
 import { Scanner } from "./scanner";
 
-function old_convertObjsKeysListToPairs(input: string): string {
-    // 1: The spacing
-    // 2: The object
-    // 3: The key
-    const pattern = /(\s+)(.+), *(.+),/;
-    let match = input.match(pattern);
-    
-    // Find each `  A, B,` and convert it to `  B: A,`
-    while (match) {
-        const spacing = match[1];
-        const obj = match[2];
-        const key = match[3];
-        input = input.replace(match[0], `${spacing}${key}: ${obj},`);
-        match = input.match(pattern);
-    }
-    
-    return input;
-}
-
 function convertObjsKeysListToPairs(input: string): string {
     const scanner = new Scanner(input);
     
