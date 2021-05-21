@@ -25,6 +25,18 @@ For most operations, this extension uses simple regex find and replace. As a res
 
 - [ ] Implement stricter parsing for dictionary initializers
 - [ ] Implement a parser for collection accessors instead of using regex
+- [ ] Split all functionality into individual commands
+  - [ ] Add a command to run a list of other commands of this extension
+  - [ ] Add setting to choose "default" commands to run in the above setting
+
+Add new commands for the following:
+- [ ] alloc-init calls to `new`
+- [ ] Collection `initWithCapacity:` calls to `new`/alloc-init
+- [ ] Accesses of known class properties to dot syntax (i.e. `UIColor.redColor`, `UIDevice.currentDevice`)
+- [ ] `[[UIView alloc] initWithFrame:CGRectZero]` to `new`/alloc-init
+- [ ] `CGRect(0, 0, 0, 0)` to `CGRectZero`
+- [ ] Remove unnecessary casts in message sends, such as `[(NSNumber *)foo boolValue]`
+- [ ] Enforce proper method declaration format, i.e. `-(void) foo: (id ) bar` to `- (void)foo:(id)bar`
 
 ## Release Notes
 
