@@ -231,7 +231,7 @@ class Modernizer implements vscode.TextDocumentContentProvider {
     }
     
     static InitWithFrame0ToNew(text: string): string {
-        return text.replace(/\[\[([\w_][\w\d_$]+) alloc\] initWithFrame:\s*.+\s*\]/g, '[$1 new]');
+        return text.replace(/\[\[([\w_][\w\d_$]+) alloc\] initWithFrame:\s*(?:CGRectZero|CGRectMake\((?:0+.?0*f?\s*,\s*){3}0+.?0*f?\s*\))\s*]/g, '[$1 new]');
     }
     
     /** Applies the given rules to the text */

@@ -46,6 +46,10 @@ const testString = `
         self.appToBlock = app;
     }
     
+    self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(0,0,screenWidth,screenHeight) style:UITableViewStyleGrouped];
+    self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(0,0,screenWidth,screenHeight)];
+    self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(0,0, 0.0, 0)];
+    
     self.onSchedule = [((NSNumber*)[dict objectForKey:@"onSchedule"]) boolValue];
     self.whitelistMode = [((NSNumber*)[dict objectForKey:@"whitelistMode"]) boolValue];
     self.showInNotificationCenter = [((NSNumber*)[dict objectForKey:@"showInNotificationCenter"]) boolValue];
@@ -123,6 +127,10 @@ const testStringFixed = `
         app.appName = dict[@"appToBlockName"];
         self.appToBlock = app;
     }
+    
+    self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(0,0,screenWidth,screenHeight) style:UITableViewStyleGrouped];
+    self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(0,0,screenWidth,screenHeight)];
+    self.tableView = [UITableView new];
     
     self.onSchedule = [((NSNumber*)dict[@"onSchedule"]) boolValue];
     self.whitelistMode = [((NSNumber*)dict[@"whitelistMode"]) boolValue];
