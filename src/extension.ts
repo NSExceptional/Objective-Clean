@@ -8,30 +8,59 @@
 
 'use strict';
 import * as vscode from 'vscode';
-import { modernize } from './modernizer';
+import Modernizer, { OCMCompoundRuleCommand, Rule } from './modernizer';
+
+function wantsDiffPreview(): boolean {
+    return vscode.workspace.getConfiguration('objective-clean').get('behavior') == 'preview';
+}
+
+async function processDocument(cmd: string) {
+    const editor = vscode.window.activeTextEditor;
+    if (editor) {
+        const document = editor.document;
+        
+        if (wantsDiffPreview()) {
+            // Generate an objc-clean scheme'd URI for the modified file
+            const orig = document.uri;
+            const diff = orig.with({ scheme: 'obj-clean', query: `?cmd=${cmd}` });
+            const filename = orig.path.split('/').pop();
+            const title = `Obj-Clean: ${filename}`;
+            // Present a diff of the active file and the modified file
+            vscode.commands.executeCommand('vscode.diff', document.uri, diff, title);
+        } else {
+            // Modify the active file immediately
+            Modernizer.shared.applyChangesToTextEditor(cmd, editor);
+        }
+    }
+}
 
 export function activate(context: vscode.ExtensionContext) {
-    let disposable = vscode.commands.registerCommand('objective-clean.modernize-file', () => {
-        const editor = vscode.window.activeTextEditor;
-
-        if (editor) {
-            const document = editor.document;
-
-            // Get the word within the selection
-            const fileContents = document.getText();
-            const modernized = modernize(fileContents);
-            
-            editor.edit(editBuilder => {
-                // Replace entire file contents
-                var firstLine = document.lineAt(0);
-                var lastLine = document.lineAt(document.lineCount - 1);
-                var fullTextRange = new vscode.Range(firstLine.range.start, lastLine.range.end);
-                editBuilder.replace(fullTextRange, modernized);
-            });
-        }
-    });
-
-    context.subscriptions.push(disposable);
+    // Register document content provider for diffing
+    context.subscriptions.push(
+        vscode.workspace.registerTextDocumentContentProvider(
+            'obj-clean', Modernizer.shared
+        )
+    );
+    
+    // Individual rules (includes the 'apply.all' command)
+    for (const cmd of Object.keys(Modernizer.allRules)) {
+        context.subscriptions.push(vscode.commands.registerCommand(cmd, () => {
+            processDocument(cmd);
+        }));
+    }
+    
+    // Compound rules
+    const ruleGroups: OCMCompoundRuleCommand[] = [
+        'objective-clean.rules.all',
+        'objective-clean.rules.enabled',
+        'objective-clean.rules.literals.all',
+        'objective-clean.rules.subscripts.all',
+    ];
+    for (const cmd of ruleGroups) {
+        context.subscriptions.push(vscode.commands.registerCommand(cmd, () => {
+            processDocument(cmd);
+        }));
+    }
 }
 
 // this method is called when your extension is deactivated

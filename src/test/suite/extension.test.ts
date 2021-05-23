@@ -4,7 +4,7 @@
 //
 
 import * as assert from 'assert';
-import { modernize } from '../../modernizer';
+import Modernizer from '../../modernizer';
 
 const testString = `
 - (void)method {
@@ -185,7 +185,7 @@ suite("Extension Tests", () => {
         };
         
         for (const [test, expectation] of Object.entries(cases)) {
-            const cleaned = modernize(test);
+            const cleaned = Modernizer.modernize(test);
             assert.strictEqual(cleaned, expectation);
         }
     });
