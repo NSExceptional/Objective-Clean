@@ -15,22 +15,195 @@
         "Linters"
     ],
     "activationEvents": [
-        "onCommand:objective-clean.modernize-file"
+        "onCommand:objective-clean.rules.all",
+        "onCommand:objective-clean.rules.enabled",
+        "onCommand:objective-clean.rules.literals.nsnumber",
+        "onCommand:objective-clean.rules.literals.nsdictionary",
+        "onCommand:objective-clean.rules.literals.nsarray",
+        "onCommand:objective-clean.rules.literals.all",
+        "onCommand:objective-clean.rules.subscripts.indexed",
+        "onCommand:objective-clean.rules.subscripts.keyed",
+        "onCommand:objective-clean.rules.subscripts.all",
+        "onCommand:objective-clean.rules.init.allocinit-new",
+        "onCommand:objective-clean.rules.init.initwithcapacity-new",
+        "onCommand:objective-clean.rules.init.initwithframe0-new",
+        "onCommand:objective-clean.rules.constants.cgrectzero"
     ],
     "main": "./dist/extension.js",
     "contributes": {
         "menus": {
             "commandPalette": [
                 {
-                    "command": "objective-clean.modernize-file",
+                    "command": "objective-clean.rules.all",
+                    "when": "editorLangId =~ /^objective-c(pp)?$|^logos$/"
+                },
+                {
+                    "command": "objective-clean.rules.enabled",
+                    "when": "editorLangId =~ /^objective-c(pp)?$|^logos$/"
+                },
+                {
+                    "command": "objective-clean.rules.literals.nsnumber",
+                    "when": "editorLangId =~ /^objective-c(pp)?$|^logos$/"
+                },
+                {
+                    "command": "objective-clean.rules.literals.nsdictionary",
+                    "when": "editorLangId =~ /^objective-c(pp)?$|^logos$/"
+                },
+                {
+                    "command": "objective-clean.rules.literals.nsarray",
+                    "when": "editorLangId =~ /^objective-c(pp)?$|^logos$/"
+                },
+                {
+                    "command": "objective-clean.rules.literals.all",
+                    "when": "editorLangId =~ /^objective-c(pp)?$|^logos$/"
+                },
+                {
+                    "command": "objective-clean.rules.subscripts.indexed",
+                    "when": "editorLangId =~ /^objective-c(pp)?$|^logos$/"
+                },
+                {
+                    "command": "objective-clean.rules.subscripts.keyed",
+                    "when": "editorLangId =~ /^objective-c(pp)?$|^logos$/"
+                },
+                {
+                    "command": "objective-clean.rules.subscripts.all",
+                    "when": "editorLangId =~ /^objective-c(pp)?$|^logos$/"
+                },
+                {
+                    "command": "objective-clean.rules.init.allocinit-new",
+                    "when": "editorLangId =~ /^objective-c(pp)?$|^logos$/"
+                },
+                {
+                    "command": "objective-clean.rules.init.initwithcapacity-new",
+                    "when": "editorLangId =~ /^objective-c(pp)?$|^logos$/"
+                },
+                {
+                    "command": "objective-clean.rules.init.initwithframe0-new",
+                    "when": "editorLangId =~ /^objective-c(pp)?$|^logos$/"
+                },
+                {
+                    "command": "objective-clean.rules.constants.cgrectzero",
                     "when": "editorLangId =~ /^objective-c(pp)?$|^logos$/"
                 }
             ]
         },
         "commands": [
             {
-                "command": "objective-clean.modernize-file",
-                "title": "Convert File to Modern Objective-C Syntax"
+                "command": "objective-clean.rules.all",
+                "title": "Objective-Clean: Apply All Rules"
+            },
+            {
+                "command": "objective-clean.rules.enabled",
+                "title": "Objective-Clean: Apply Enabled Rules"
+            },
+            {
+                "command": "objective-clean.rules.literals.nsnumber",
+                "title": "Objective-Clean: Apply NSNumber Literals"
+            },
+            {
+                "command": "objective-clean.rules.literals.nsdictionary",
+                "title": "Objective-Clean: Apply NSDictionary Literals"
+            },
+            {
+                "command": "objective-clean.rules.literals.nsarray",
+                "title": "Objective-Clean: Apply NSArray Literals"
+            },
+            {
+                "command": "objective-clean.rules.literals.all",
+                "title": "Objective-Clean: Apply All Foundation Literals"
+            },
+            {
+                "command": "objective-clean.rules.subscripts.indexed",
+                "title": "Objective-Clean: Apply Indexed Subscripts"
+            },
+            {
+                "command": "objective-clean.rules.subscripts.keyed",
+                "title": "Objective-Clean: Apply Keyed Subscripts"
+            },
+            {
+                "command": "objective-clean.rules.subscripts.all",
+                "title": "Objective-Clean: Apply Indexed + Keyed Subscripts"
+            },
+            {
+                "command": "objective-clean.rules.init.allocinit-new",
+                "title": "Objective-Clean: Apply alloc-init → new"
+            },
+            {
+                "command": "objective-clean.rules.init.initwithcapacity-new",
+                "title": "Objective-Clean: Apply initWithCapacity: → new/alloc-init"
+            },
+            {
+                "command": "objective-clean.rules.init.initwithframe0-new",
+                "title": "Objective-Clean: Apply initWithFrame:CGRectZero → new/alloc-init"
+            },
+            {
+                "command": "objective-clean.rules.constants.cgrectzero",
+                "title": "Objective-Clean: Apply CGRectZero Constant"
+            }
+        ],
+        "configuration":[
+            {
+                "title": "Obj-Clean",
+                "properties": {
+                    "objective-clean.behavior": {
+                        "description": "Whether or not to preview changes first",
+                        "type": "number",
+                        "default": "preview",
+                        "enum": [
+                            "noDiff", "preview"
+                        ],
+                        "enumDescriptions": [
+                            "Apply changes without diffing",
+                            "Preview changes diff"
+                        ]
+                    },
+                    "objective-clean.rules.literals.nsnumber": {
+                        "type": "boolean",
+                        "default": true,
+                        "description": "Convert NSNumber initializers to use literal syntax"
+                    },
+                    "objective-clean.rules.literals.nsdictionary": {
+                        "type": "boolean",
+                        "default": true,
+                        "description": "Convert NS[Mutable]Dictionary initializers to use literal syntax"
+                    },
+                    "objective-clean.rules.literals.nsarray": {
+                        "type": "boolean",
+                        "default": true,
+                        "description": "Convert NS[Mutable]Array initializers to use literal syntax"
+                    },
+                    "objective-clean.rules.subscripts.indexed": {
+                        "type": "boolean",
+                        "default": true,
+                        "description": "Convert indexed collection accesses to use subscript syntax"
+                    },
+                    "objective-clean.rules.subscripts.keyed": {
+                        "type": "boolean",
+                        "default": true,
+                        "description": "Convert keyed collection accesses to use subscript syntax"
+                    },
+                    "objective-clean.rules.init.allocinit-new": {
+                        "title": "alloc-init → new",
+                        "type": "boolean",
+                        "default": false,
+                        "description": "Convert simple alloc-init calls to use +new"
+                    },
+                    "objective-clean.rules.init.initwithcapacity-new": {
+                        "type": "boolean",
+                        "default": false,
+                        "description": "Convert collection initWithCapacity: initializers to +new"
+                    },
+                    "objective-clean.rules.init.initwithframe0-new": {
+                        "type": "boolean",
+                        "default": false,
+                        "description": "Convert calls to initWithFrame: with an empty frame to +new"
+                    },
+                    "objective-clean.rules.constants.cgrectzero": {
+                        "type": "boolean",
+                        "default": false,
+                        "description": "Convert CGRect(0, 0, 0, 0) to CGRectZero"
+                    }
+                }
             }
         ]
     },
