@@ -40,6 +40,4 @@ Add new commands for the following:
 
 ## Release Notes
 
-### 1.0.0
-
-Initial release
+See the [changelog](CHANGELOG.md)
