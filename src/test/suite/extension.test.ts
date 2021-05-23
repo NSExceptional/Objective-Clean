@@ -21,6 +21,15 @@ const testString = `
         self.weekDays, @"weekDays",
     nil];
   
+    NSArray *planets = [NSArray arrayWithObject: @"earth"];
+    NSArray *months = [NSArray arrayWithObjects:
+        @"Jan", @"Feb",
+        @"Mar", @"Apr,
+        @"May", @"Jun",
+        @"Jul", @"Aug",
+        @"Sept, @"Oct",
+        @"Nov", @"Dec",
+        nil];
     NSArray *weekdays = [NSArray arrayWithObjects: @"Sun", @"Mon", @"Tue", @"Wed", @"Thu",@"Fri", @"Sat", nil];
     id monday = [weekdays objectAtIndex:1];
     
@@ -28,8 +37,6 @@ const testString = `
     [mutableWeekdays replaceObjectAtIndex:3 withObject:monday];
     
     self.filterName = [dict objectForKey:@"filterName"];
-    self.filterText = [dict objectForKey:@"filterText"];
-    self.blockType = [((NSNumber*)[dict objectForKey:@"blockType"]) intValue];
     self.filterType = [((NSNumber*)[dict objectForKey:@"filterType"]) intValue];
 
     if ([dict objectForKey:@"appToBlockIdentifier"] != nil) {
@@ -52,6 +59,28 @@ const testString = `
     id yes = [NSNumber numberWithBool:YES];
     id no = [NSNumber numberWithBool:NO];
     id filtertype = [NSNumber numberWithInt:self.filterType];
+    id view = [[UIButton alloc] initWithFrame:CGRectMake(0, 0.0, 0, 0)];
+    CGRect *rects = {
+        CGRectMake(0,0,0,0),
+        CGRectMake(0, 0, 0, 0),
+        CGRectMake(0.0,0.0,0.0,0.0),
+        CGRectMake(0.0, 0.0, 0.0, 0.0),
+        CGRectMake(0.0 , 0, 0.f, 0.0f),
+    };
+    
+    id five = [NSNumber numberWithInteger:5];
+    id pi = [NSNumber numberWithDouble:3.14];
+    id yes = [NSNumber numberWithBool:YES];
+    id no = [NSNumber numberWithBool:NO];
+    id filtertype = [NSNumber numberWithInt:self.filterType];
+    id view = [[UIButton alloc] initWithFrame:CGRectMake(0, 0.0, 0, 0)];
+    CGRect *rects = {
+        CGRectMake(0,0,0,0),
+        CGRectMake(0, 0, 0, 0),
+        CGRectMake(0.0,0.0,0.0,0.0),
+        CGRectMake(0.0, 0.0, 0.0, 0.0),
+        CGRectMake(0.0 , 0, 0.f, 0.0f),
+    };
 }
 `;
 
@@ -70,6 +99,15 @@ const testStringFixed = `
         @"weekDays": self.weekDays,
     }.mutableCopy;
   
+    NSArray *planets = @[@"earth"];
+    NSArray *months = @[
+        @"Jan", @"Feb",
+        @"Mar", @"Apr,
+        @"May", @"Jun",
+        @"Jul", @"Aug",
+        @"Sept, @"Oct",
+        @"Nov", @"Dec",
+        ];
     NSArray *weekdays = @[@"Sun", @"Mon", @"Tue", @"Wed", @"Thu",@"Fri", @"Sat", ];
     id monday = weekdays[1];
     
@@ -77,12 +115,10 @@ const testStringFixed = `
     mutableWeekdays[3] = monday;
     
     self.filterName = dict[@"filterName"];
-    self.filterText = dict[@"filterText"];
-    self.blockType = [((NSNumber*)dict[@"blockType"]) intValue];
     self.filterType = [((NSNumber*)dict[@"filterType"]) intValue];
 
     if (dict[@"appToBlockIdentifier"] != nil) {
-        AppInfo *app = [[AppInfo alloc] init];
+        AppInfo *app = [AppInfo new];
         app.appIdentifier = dict[@"appToBlockIdentifier"];
         app.appName = dict[@"appToBlockName"];
         self.appToBlock = app;
@@ -101,6 +137,28 @@ const testStringFixed = `
     id yes = @YES;
     id no = @NO;
     id filtertype = @(self.filterType);
+    id view = [UIButton new];
+    CGRect *rects = {
+        CGRectZero,
+        CGRectZero,
+        CGRectZero,
+        CGRectZero,
+        CGRectZero,
+    };
+    
+    id five = @5;
+    id pi = @3.14;
+    id yes = @YES;
+    id no = @NO;
+    id filtertype = @(self.filterType);
+    id view = [UIButton new];
+    CGRect *rects = {
+        CGRectZero,
+        CGRectZero,
+        CGRectZero,
+        CGRectZero,
+        CGRectZero,
+    };
 }
 `;
 
