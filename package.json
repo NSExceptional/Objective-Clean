@@ -2,7 +2,7 @@
     "name": "objective-clean",
     "displayName": "Objective-Clean",
     "description": "Migrate crusty Objective-C code to modern paradigms such as collection literals.",
-    "version": "1.0.0",
+    "version": "2.0.0",
     "publisher": "objc",
     "repository": {
         "type": "git",
