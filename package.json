@@ -2,7 +2,7 @@
     "name": "objective-clean",
     "displayName": "Objective-Clean",
     "description": "Migrate crusty Objective-C code to modern paradigms such as collection literals.",
-    "version": "2.0.0",
+    "version": "2.1.0",
     "publisher": "objc",
     "repository": {
         "type": "git",
@@ -27,7 +27,8 @@
         "onCommand:objective-clean.rules.init.allocinit-new",
         "onCommand:objective-clean.rules.init.initwithcapacity-new",
         "onCommand:objective-clean.rules.init.initwithframe0-new",
-        "onCommand:objective-clean.rules.constants.cgrectzero"
+        "onCommand:objective-clean.rules.constants.cgrectzero",
+        "onCommand:objective-clean.rules.moderncomments"
     ],
     "main": "./dist/extension.js",
     "contributes": {
@@ -84,6 +85,10 @@
                 {
                     "command": "objective-clean.rules.constants.cgrectzero",
                     "when": "editorLangId =~ /^objective-c(pp)?$|^logos$/"
+                },
+                {
+                    "command": "objective-clean.rules.moderncomments",
+                    "when": "editorLangId =~ /^objective-c(pp)?$|^logos$/"
                 }
             ]
         },
@@ -139,6 +144,10 @@
             {
                 "command": "objective-clean.rules.constants.cgrectzero",
                 "title": "Objective-Clean: Apply CGRectZero Constant"
+            },
+            {
+                "command": "objective-clean.rules.moderncomments",
+                "title": "Objective-Clean: Modernize C-Style Comment Blocks"
             }
         ],
         "configuration":[

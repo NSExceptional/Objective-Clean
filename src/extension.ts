@@ -8,13 +8,13 @@
 
 'use strict';
 import * as vscode from 'vscode';
-import Modernizer, { OCMCompoundRuleCommand, Rule } from './modernizer';
+import Modernizer, { OCMCommand, OCMCompoundRuleCommand } from './modernizer';
 
 function wantsDiffPreview(): boolean {
     return vscode.workspace.getConfiguration('objective-clean').get('behavior') == 'preview';
 }
 
-async function processDocument(cmd: string) {
+async function processDocument(cmd: OCMCommand) {
     const editor = vscode.window.activeTextEditor;
     if (editor) {
         const document = editor.document;
@@ -29,7 +29,8 @@ async function processDocument(cmd: string) {
             vscode.commands.executeCommand('vscode.diff', document.uri, diff, title);
         } else {
             // Modify the active file immediately
-            Modernizer.shared.applyChangesToTextEditor(cmd, editor);
+            const changes = Modernizer.applyCommandToText(cmd, editor.document.getText());
+            Modernizer.shared.applyChangesToTextEditor(changes, editor);
         }
     }
 }
@@ -45,7 +46,7 @@ export function activate(context: vscode.ExtensionContext) {
     // Individual rules (includes the 'apply.all' command)
     for (const cmd of Object.keys(Modernizer.allRules)) {
         context.subscriptions.push(vscode.commands.registerCommand(cmd, () => {
-            processDocument(cmd);
+            processDocument(cmd as OCMCommand);
         }));
     }
     

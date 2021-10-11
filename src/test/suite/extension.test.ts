@@ -180,6 +180,54 @@ const mangledCasesMangled = `
 [[foo bar:foo1]][key];
 `;
 
+const testComments = `
+if (foo) {
+    /*
+     * Block comment
+     * 
+     * blah blah
+     */
+    return bar;
+} else {
+    /** inline comment */
+    return baz;
+    
+    /*
+    Block comment with no
+    leading space or *
+    */
+}
+
+/** Weirdly formatted comment
+ * second line
+ * third line
+ * 
+ * blank line above
+ */
+void main() { }
+`;
+const testCommentsFixed = `
+if (foo) {
+    // Block comment
+    // 
+    // blah blah
+    return bar;
+} else {
+    /// inline comment 
+    return baz;
+    
+    // Block comment with no
+    // leading space or *
+}
+
+/// Weirdly formatted comment
+/// second line
+/// third line
+/// 
+/// blank line above
+void main() { }
+`;
+
 // const unhandledCases = `
 // `;
 
@@ -189,6 +237,7 @@ suite("Extension Tests", () => {
         const cases = {
             [testString]: testStringFixed,
             [mangledCasesOriginal]: mangledCasesMangled,
+            [testComments]: testCommentsFixed,
             // [unhandledCases]: unhandledCases
         };
         

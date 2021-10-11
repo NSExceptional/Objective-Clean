@@ -18,7 +18,7 @@ type Tags = { [key: string]: string | undefined };
 
 export class Scanner {
     private input: string;
-    private location = 0;
+    public location = 0;
     
     constructor(input: string) {
         this.input = input;
@@ -26,6 +26,14 @@ export class Scanner {
     
     get string(): string {
         return this.input.slice(this.location);
+    }
+    
+    get scanned(): string {
+        return this.scannedSince(0);
+    }
+    
+    get remaining(): string {
+        return this.input.substr(this.location);
     }
     
     get isAtEnd(): boolean {
@@ -51,10 +59,10 @@ export class Scanner {
     }
     
     scanUpToString(str: string): string | false {
-        const idx = this.input.indexOf(str, this.location);
+        const idx = this.string.indexOf(str);
         if (idx != -1) {
             const scanned = this.string.slice(0, idx);
-            this.location = idx;
+            this.location += idx;
             return scanned;
         }
         

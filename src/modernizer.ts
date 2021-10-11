@@ -7,7 +7,7 @@
 //
 
 import * as vscode from 'vscode';
-import { Scanner } from "./scanner";
+import { Scanner } from './scanner';
 
 export type Rule = (input: string) => string;
 
@@ -20,7 +20,8 @@ export type OCMRuleCommand =
     'objective-clean.rules.constants.cgrectzero' |
     'objective-clean.rules.init.allocinit-new' |
     'objective-clean.rules.init.initwithcapacity-new' |
-    'objective-clean.rules.init.initwithframe0-new';
+    'objective-clean.rules.init.initwithframe0-new' |
+    'objective-clean.rules.moderncomments';
 
 export type OCMCompoundRuleCommand =
     'objective-clean.rules.all' |
@@ -43,6 +44,7 @@ class Modernizer implements vscode.TextDocumentContentProvider {
         'objective-clean.rules.init.allocinit-new': Modernizer.AllocInitToNew,
         'objective-clean.rules.init.initwithcapacity-new': Modernizer.InitWithCapacityToNew,
         'objective-clean.rules.init.initwithframe0-new': Modernizer.InitWithFrame0ToNew,
+        'objective-clean.rules.moderncomments': Modernizer.ModernComments,
     };
     
     static compoundRulesByCmd: { [cmd in OCMCompoundRuleCommand]: Rule[] } = {
@@ -232,6 +234,49 @@ class Modernizer implements vscode.TextDocumentContentProvider {
     
     static InitWithFrame0ToNew(text: string): string {
         return text.replace(/\[\[([\w_][\w\d_$]+) alloc\] initWithFrame:\s*(?:CGRectZero|CGRectMake\((?:0+.?0*f?\s*,\s*){3}0+.?0*f?\s*\))\s*]/g, '[$1 new]');
+    }
+    
+    static ModernComments(input: string): string {
+        let scanner = new Scanner(input);
+        
+        while (scanner.scanUpToPattern(/ *\/\*/)) {
+            const start = scanner.location;
+            const pre = scanner.scanned;
+            const openingWithWhitespace = scanner.scanPattern(/ *\/\*\*?/) as string;
+            const leadingWhitespace = openingWithWhitespace.split('/*')[0];
+            const content = scanner.scanUpToString('*/');
+            scanner.scanString('*/');
+            const post = scanner.remaining;
+            
+            if (!content) {
+                // Couldn't parse input; abort
+                return input;
+            }
+            
+            // Split content into individual lines
+            let lines = content.split('\n').map(l => l.trimStart());
+            // Remove empty lines from start and end
+            if (!lines[0].length) {
+                lines.shift();
+            }
+            if (!lines[lines.length-1].length) {
+                lines.pop();
+            }
+            // Remove leading * and don't add leading space as most
+            // comemnts like this will have a space after the *,
+            // or just add a space
+            lines = lines.map(l => l.startsWith('*') ? l.substr(1) : (' ' + l));
+            
+            // Choose slash style based on whether /** /* was used
+            const slashes = openingWithWhitespace.endsWith('**') ? '///' : '//';
+            const newContent = lines.map(l => `${leadingWhitespace}${slashes}${l}`).join('\n');
+            input = pre + newContent + post;
+            scanner = new Scanner(input);
+            // Offset scanning by the length of the content, -1 for each line
+            scanner.location = start + newContent.length - lines.length;
+        }
+        
+        return input;
     }
     
     /** Applies the given rules to the text */

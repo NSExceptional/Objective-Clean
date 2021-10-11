@@ -9,3 +9,7 @@
 - Add settings to enable or disable certain rules
 - Add ability to preview changes in a diff first
 - Add ability to run all rules or only enabled rules
+
+## 2.1.0 | 2021-08-07
+- Support converting C-style block comments to triple-slash comments
+- Fix a bug where no-preview mode wouldn't change the file correctly
